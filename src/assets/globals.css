@@ -1,0 +1,66 @@
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+:root {
+    /*tryb jasny*/
+    --background: #f0f0f0;
+    --middleground: #f8f8f8;
+    --foreground: #fff;
+    --font-color: #3a144b;
+    --button-color: #3a144b;
+}
+
+@media (prefers-color-scheme: dark) {
+    /*tryb ciemny*/
+    :root {
+        /*--background: #0a0a0a;*/
+        /*--foreground: #ededed;*/
+    }
+}
+
+body {
+    color: var(--font-color);
+    background: var(--background);
+    font-family: "Josefin Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+}
+
+
+
+h1 {
+    font-size: 2.8em;
+    font-weight: 700;
+}
+h2 {
+    font-size: 2em;
+}
+h3 {
+    font-size: 1.5em;
+}
+h4 {
+    font-size: 1em;
+}
+h5 {
+    font-size: 0.83em;
+}
+h6 {
+    font-size: 0.67em;
+}
+
+.primary-button {
+    background-color: var(--font-color);
+    color: var(--foreground);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.plain-button {
+    color: blue;
+}
