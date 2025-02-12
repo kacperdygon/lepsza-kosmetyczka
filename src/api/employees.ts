@@ -25,3 +25,9 @@ export function removeEmployee(id: number) {
 
   saveUsers(users);
 }
+
+export function getEmployeeById(id: number) {
+  const users = getUsers();
+  const userIndex = users.findIndex(user => user.id === id);
+  return users[userIndex];
+}

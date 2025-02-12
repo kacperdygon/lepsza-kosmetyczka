@@ -1,11 +1,50 @@
 <script setup lang="ts">
-
-import {getTreatments} from "@/api/treatments.ts";
-import {getEmployees} from "@/api/employees.ts";
+import { getTreatments } from "@/api/treatments.ts";
+import { getEmployees } from "@/api/employees.ts";
+import {addVisit, getVisits} from "@/api/visits.ts";
+import { useRoute } from "vue-router";
+import { reactive, computed } from "vue";
+import { AvaibleTimes } from "@/api/visits.ts";
 
 const treatments = getTreatments();
 const employees = getEmployees();
+const visits = getVisits(); // Pobieramy wszystkie wizyty
 
+const route = useRoute();
+const treatmentId = route.params.id ? Number(route.params.id) : 0; // Parsowanie ID
+
+// Dane formularza
+const formData = reactive({
+  name: "",
+  email: "",
+  phone: "",
+  employeeId: 0,
+  treatmentId: treatmentId,
+  date: "",
+  time: "" as unknown as AvaibleTimes,
+  additionalComments: "",
+});
+
+const availableTimes = computed(() => {
+  if (!formData.date || !formData.employeeId) {
+    return Object.values(AvaibleTimes).filter((time) => isNaN(Number(time)));
+  }
+
+  const bookedTimes = visits
+    .filter((visit) => visit.date === formData.date && visit.employeeId === formData.employeeId)
+    .map((visit) => visit.time);
+
+  return Object.values(AvaibleTimes)
+    .filter((time) => isNaN(Number(time))) // Usuwa liczby (0-9)
+    .filter((time) => !bookedTimes.includes(time)); // Usuwa już zarezerwowane godziny
+});
+
+
+// Obsługa wysyłania formularza
+const submitForm = () => {
+  console.log("Form submitted:", formData);
+  addVisit(formData.name, formData.email, formData.phone, formData.employeeId, formData.treatmentId, formData.date, formData.time, formData.additionalComments);
+};
 </script>
 
 <template>
@@ -13,109 +52,72 @@ const employees = getEmployees();
     <section class="appointment-hero">
       <div class="appointment-hero-content">
         <h1>Umów się na wizytę</h1>
-        <p>
-          Zarezerwuj termin w naszym salonie w dogodnym dla Ciebie czasie.
-        </p>
+        <p>Zarezerwuj termin w naszym salonie w dogodnym dla Ciebie czasie.</p>
       </div>
     </section>
 
     <section class="appointment-form">
-      <h2>Formularz rezerwacji</h2>
-      <form class="form-container">
+      <h2>Formularz wizyty</h2>
+      <form class="form-container" @submit.prevent="submitForm">
         <div class="form-group">
           <label for="name">Imię i nazwisko:</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            placeholder="Twoje imię i nazwisko"
-            value=""
-          required
-          />
+          <input type="text" id="name" v-model="formData.name" required />
         </div>
+
         <div class="form-group">
           <label for="email">Adres e-mail:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="Twój adres e-mail"
-            value=""
-          required
-          />
+          <input type="email" id="email" v-model="formData.email" required />
         </div>
+
         <div class="form-group">
           <label for="phone">Numer telefonu:</label>
-          <input
-            type="tel"
-            id="phone"
-            name="phone"
-            placeholder="Twój numer telefonu"
-            value=""
-          required
-          />
+          <input type="tel" id="phone" v-model="formData.phone" required />
         </div>
+
         <div class="form-group">
-          <label for="service">Wybierz pracownika:</label>
-          <select
-            defaultValue="DEFAULT"
-            id="service"
-            name="service"
-            value="Wybierz..."
-            required
-          >
-            <option value="DEFAULT" disabled>Wybierz z listy...</option>
-            <option v-for="employee in employees" :key="employee.id" :value="employee.id">{{employee.username}}</option>
+          <label for="employee">Wybierz pracownika:</label>
+          <select id="employee" v-model="formData.employeeId" required>
+            <option value="" disabled>Wybierz z listy...</option>
+            <option v-for="employee in employees" :key="employee.id" :value="employee.id">
+              {{ employee.username }}
+            </option>
           </select>
         </div>
+
         <div class="form-group">
           <label for="service">Wybierz zabieg:</label>
-          <select
-            defaultValue="DEFAULT"
-            id="service"
-            name="service"
-            value="Wybierz..."
-          required
-          >
-          <option value="DEFAULT" disabled>Wybierz z listy...</option>
-            <option v-for="treatment in treatments" :key="treatment.id" :value="treatment.id">{{treatment.title}}</option>
+          <select id="service" v-model="formData.treatmentId" required>
+            <option value="" disabled>Wybierz z listy...</option>
+            <option v-for="treatment in treatments" :key="treatment.id" :value="treatment.id">
+              {{ treatment.title }}
+            </option>
           </select>
         </div>
+
         <div class="form-group">
           <label for="date">Data wizyty:</label>
-          <input
-            type="date"
-            id="date"
-            name="date"
-          required
-          />
+          <input type="date" id="date" v-model="formData.date" required />
         </div>
+
         <div class="form-group">
           <label for="time">Godzina wizyty:</label>
-          <select
-            id="time"
-            name="time"
-          required
-          >
-          <option value="DEFAULT" disabled>Wybierz godzinę...</option>
-
+          <select id="time" v-model="formData.time" required>
+            <option value="" disabled>Wybierz godzinę...</option>
+            <option v-for="hour in availableTimes" :key="hour" :value="hour">
+              {{ hour }}
+            </option>
           </select>
         </div>
+
         <div class="form-group">
           <label for="notes">Dodatkowe uwagi (opcjonalne):</label>
-          <textarea
-            id="notes"
-            name="notes"
-            placeholder="Czy masz jakieś szczególne wymagania?"
-          />
-          </div>
-          <button type="submit" class="btn-submit primary-button">Zarezerwuj termin</button>
+          <textarea id="notes" v-model="formData.additionalComments" placeholder="Czy masz jakieś szczególne wymagania?"></textarea>
+        </div>
 
-          </form>
-          </section>
-
-
-          </div>
+        <button type="submit" class="btn-submit primary-button">Zarezerwuj termin</button>
+      </form>
+    </section>
+  </div>
 </template>
 
 <style scoped>
@@ -146,7 +148,7 @@ const employees = getEmployees();
 }
 
 .form-container {
-  width:700px;
+  width: 700px;
   margin: 0 auto;
   background-color: var(--foreground);
   padding: 20px;
@@ -203,8 +205,8 @@ const employees = getEmployees();
   background-color: #5c2b61;
 }
 
-input, textarea {
+input,
+textarea {
   box-sizing: border-box;
 }
-
 </style>

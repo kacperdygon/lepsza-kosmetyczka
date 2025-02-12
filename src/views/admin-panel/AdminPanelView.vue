@@ -2,6 +2,15 @@
 
 import Treatments from "@/views/admin-panel/components/TreatmentList.vue";
 import Users from "@/views/admin-panel/components/UserList.vue";
+import {isUserAdmin} from "@/api/users.ts";
+import {useRouter} from "vue-router";
+
+const router = useRouter();
+
+if (!isUserAdmin()){
+  router.push('/');
+}
+
 </script>
 
 <template>

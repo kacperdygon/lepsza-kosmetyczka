@@ -13,8 +13,8 @@
     <RouterLink to="/book-now" class="book-now-button primary-button">
       Umów się
     </RouterLink>
-    <RouterLink to="/auth/login">
-      <Image src={personIcon} alt="person icon" />
+    <RouterLink to="/sign-in">
+      <img src="./person-icon.svg" alt="person icon" />
     </RouterLink>
   </nav>
 </template>

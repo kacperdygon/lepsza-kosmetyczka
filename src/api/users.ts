@@ -18,7 +18,7 @@ export function saveUsers(userArray: User[]){
   localStorage.setItem("users", JSON.stringify(userArray));
 }
 
-export function getUsers(): User[] {
+export function getUsersBare(): User[] {
   const storedUsers = localStorage.getItem("users");
   let parsedStoredUsers;
 
@@ -29,6 +29,21 @@ export function getUsers(): User[] {
   }
 
   return parsedStoredUsers as User[];
+}
+
+export function getUsers(): User[] {
+  const storedUsers = localStorage.getItem("users");
+  let parsedStoredUsers;
+
+  if (storedUsers) {
+    parsedStoredUsers = JSON.parse(storedUsers);
+  } else {
+    parsedStoredUsers = [];
+  }
+
+  const filteredUsers = parsedStoredUsers.filter((user: User) => user.userType !== UserType.Admin);
+
+  return filteredUsers as User[];
 }
 
 export function isUserLoggedIn() {
@@ -54,4 +69,12 @@ export function changeUserName(userId: number, newName: string) {
     user.username = newName;
     saveUsers(users);
   }
+}
+
+export function isUserAdmin(){
+  const userId = Number(Cookies.get('userId'));
+  const users = getUsersBare();
+  const userIndex = users.findIndex(user => user.id === userId);
+  if (userIndex == -1) return false;
+  return users[userIndex].userType === UserType.Admin;
 }

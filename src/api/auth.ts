@@ -1,11 +1,11 @@
 
 import Cookies from 'js-cookie'
-import {getUsers, saveUsers, type User, UserType} from "@/api/users.ts";
+import {getUsers, getUsersBare, saveUsers, type User, UserType} from "@/api/users.ts";
 
 
 export function login(email: string, password: string): number {
 
-  const userArray = getUsers();
+  const userArray = getUsersBare();
 
   const user = userArray.find(user => user.email === email && user.password === password);
 
@@ -20,7 +20,7 @@ export function login(email: string, password: string): number {
 
 export function register(email: string, password: string): number {
 
-  const userArray = getUsers();
+  const userArray = getUsersBare();
 
   let nextId;
   if (userArray.length == 0) {
@@ -34,7 +34,7 @@ export function register(email: string, password: string): number {
     username: email,
     email: email,
     password: password,
-    userType: UserType.Client,
+    userType: nextId == 0 ? UserType.Admin : UserType.Client,
   }
 
   if (userArray.some((user) => user.email === email)) {

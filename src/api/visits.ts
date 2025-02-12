@@ -1,9 +1,26 @@
+export enum AvaibleTimes{
+  "09:00",
+  "10:00",
+  "11:00",
+  "12:00",
+  "13:00",
+  "14:00",
+  "15:00",
+  "16:00",
+  "17:00",
+  "18:00"
+}
 
 export interface Visit{
   id: number;
-  title: string;
-  description: string;
-  price: number;
+  name: string;
+  email: string;
+  phone: string;
+  employeeId: number;
+  treatmentId: number;
+  date: Date;
+  time: AvaibleTimes;
+  additionalComments: string;
 }
 
 export function saveVisits(userArray: Visit[]){
@@ -11,7 +28,8 @@ export function saveVisits(userArray: Visit[]){
 }
 
 export function getVisits(): Visit[] {
-  const storedVisits = localStorage.getItem("Visits");
+  const storedVisits = localStorage.getItem("visits");
+
   let parsedStoredVisits;
 
   if (storedVisits) {
@@ -23,7 +41,8 @@ export function getVisits(): Visit[] {
   return parsedStoredVisits as Visit[];
 }
 
-export function addVisit(title: string, description: string, price: number){
+export function addVisit(name: string, email: string, phone: string, employeeId: number, treatmentId: number, date: Date, time: AvaibleTimes, additionalComments: string) {
+
   const visitArray = getVisits();
 
   let nextId;
@@ -35,9 +54,14 @@ export function addVisit(title: string, description: string, price: number){
 
   const newVisit = {
     id: nextId,
-    title: title,
-    description: description,
-    price: price
+    name: name,
+    email: email,
+    phone: phone,
+    employeeId: employeeId,
+    treatmentId: treatmentId,
+    date: date,
+    time: time,
+    additionalComments: additionalComments
   }
 
   visitArray.push(newVisit);
@@ -46,9 +70,31 @@ export function addVisit(title: string, description: string, price: number){
 }
 
 export function deleteVisit(id: number){
-  const Visits = getVisits();
+  const visits = getVisits();
 
-  const filteredVisits = Visits.filter(Visit => Visit.id !== id )
+  const filteredVisits = visits.filter(visit => visit.id !== id )
 
   saveVisits(filteredVisits);
 }
+
+export function getVisitById(id: number): Visit{
+  const visits = getVisits();
+  const filteredVisits = visits.filter(visit => visit.id == id )
+  return filteredVisits[0];
+}
+
+export function getAvailableTimes(employeeId: number, date: Date): AvaibleTimes[] {
+  const visits = getVisits(); // Pobieramy wszystkie wizyty
+
+  // Pobranie wizyt dla danego pracownika w danym dniu
+  const bookedTimes = visits
+    .filter(visit => visit.employeeId === employeeId && new Date(visit.date).toDateString() === date.toDateString())
+    .map(visit => visit.time);
+
+  // Pobranie tylko wartości enum jako AvaibleTimes[]
+  const allTimes = Object.values(AvaibleTimes).filter(time => typeof time === "string") as unknown as AvaibleTimes[];
+
+  // Zwrócenie dostępnych godzin
+  return allTimes.filter(time => !bookedTimes.includes(time));
+}
+

@@ -37,10 +37,10 @@ function handleSubmit(): void {
 
   if (statusCode == 409) {
     signUpMessage.color = "red";
-    signUpMessage.message = "User already exists!"
+    signUpMessage.message = "Użytkownik już istnieje!"
   } else if (statusCode == 201) {
     signUpMessage.color = "green";
-    signUpMessage.message = "User created"
+    signUpMessage.message = "Stworzono użytkownika"
   }
 }
 

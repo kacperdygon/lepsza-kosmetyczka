@@ -7,6 +7,7 @@ import BookNowView from "@/views/main-views/book-now/BookNowView.vue";
 import SignInView from "@/views/auth/sign-in/SignInView.vue";
 import SignUpView from "@/views/auth/sign-up/SignUpView.vue";
 import AdminPanelView from "@/views/admin-panel/AdminPanelView.vue";
+import ShowVisitView from "@/views/main-views/show-visit/ShowVisitView.vue";
 
 
 
@@ -42,6 +43,11 @@ const router = createRouter({
       path: '/book-now',
       name: 'book-now',
       component: BookNowView,
+    },
+    {
+      path: '/show-visit/:id',
+      name: 'show-visit',
+      component: ShowVisitView,
     },
     {
       path: '/sign-in',

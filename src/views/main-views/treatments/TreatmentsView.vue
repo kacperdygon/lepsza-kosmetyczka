@@ -1,8 +1,13 @@
 <script setup lang="ts">
 
 import {getTreatments} from "@/api/treatments.ts";
+import {onMounted} from "vue";
 
 const treatments = getTreatments()
+
+onMounted(() => {
+  console.log(treatments)
+})
 
 </script>
 
@@ -21,7 +26,7 @@ const treatments = getTreatments()
           <b>Cena: </b>
           {{treatment.price.toFixed(2)}} zł
         </p>
-        <RouterLink :to="{ name: 'book-now', params: { id: treatment.id } }" class="plain-button">
+        <RouterLink :to="{ name: 'book-now-id', params: { id: treatment.id } }" class="plain-button">
           Umawiam się
         </RouterLink>
       </div>

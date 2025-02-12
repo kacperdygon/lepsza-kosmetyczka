@@ -12,8 +12,6 @@ const layout = computed(() => {
   return noWrapperRoutes.includes(route.name?.toString() || '') ? 'div' : DefaultLayout;
 });
 
-console.log('Current route name:', route.name); // 🔍 Sprawdź w konsoli
-
 </script>
 
 <template>

@@ -1,3 +1,4 @@
+import {getUsers} from "@/api/users.ts";
 
 export interface Treatment{
   id: number;
@@ -51,4 +52,10 @@ export function deleteTreatment(id: number){
   const filteredTreatments = treatments.filter(treatment => treatment.id !== id )
 
   saveTreatments(filteredTreatments);
+}
+
+export function getTreatmentById(id: number) {
+  const treatments = getTreatments();
+  const treatmentIndex = treatments.findIndex(treatment => treatment.id === id);
+  return treatments[treatmentIndex];
 }
