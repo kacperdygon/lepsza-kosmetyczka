@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import "../auth.css"
-import {reactive, ref} from "vue";
+import {computed, reactive, ref} from "vue";
 import {login} from "@/api/auth.ts";
 import {useRouter} from "vue-router";
 
@@ -17,6 +17,10 @@ const signUpMessage = reactive({
   message: "",
   color: "red",
 });
+
+const signUpMessageColor = computed(() => {
+  return signUpMessage.color;
+})
 
 const router = useRouter();
 
@@ -41,7 +45,7 @@ function handleSubmit() {
 </script>
 
 <template>
-  <div>
+  <div class="auth-div">
     <form
 @submit.prevent="handleSubmit"
       >
@@ -51,7 +55,7 @@ function handleSubmit() {
         <input
           class="login-input"
           type="text"
-          placeholder="e-mail/nazwa"
+          placeholder="e-mail"
           v-model="formData.email"
           required
         />
@@ -72,7 +76,7 @@ function handleSubmit() {
         />
         &nbsp;Pokaż hasło
       </label>
-      <p>{{signUpMessage.message}}</p>
+      <p class="sign-up-message">{{signUpMessage.message}}</p>
       <p>
         Nie masz jeszcze konta? <RouterLink to="/sign-up">Zarejestruj się</RouterLink>
       </p>
@@ -85,5 +89,8 @@ function handleSubmit() {
 </template>
 
 <style scoped>
-
+@import "../auth.css";
+.sign-up-message{
+  color: v-bind(signUpMessageColor)
+}
 </style>

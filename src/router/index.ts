@@ -34,6 +34,11 @@ const router = createRouter({
       component: GalleryView,
     },
     {
+      path: '/book-now/:id',
+      name: 'book-now-id',
+      component: BookNowView,
+    },
+    {
       path: '/book-now',
       name: 'book-now',
       component: BookNowView,

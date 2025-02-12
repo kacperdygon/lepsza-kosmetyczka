@@ -1,0 +1,23 @@
+section{
+    display:flex;
+    flex-direction: column;
+    text-align: center;
+    padding:30px;
+    align-items: center;
+}
+button{
+    width:200px;
+}
+
+li{
+    text-align: left;
+    list-style: none;
+    padding:20px;
+    margin: 0 0 10px;
+
+    border:2px var(--font-color ) solid;
+    border-radius: 5px;
+}
+ul{
+    padding:0;
+}

@@ -1,11 +1,7 @@
 
 import Cookies from 'js-cookie'
-export interface User{
-  id: number;
-  username: string;
-  email: string;
-  password: string;
-}
+import {getUsers, saveUsers, type User, UserType} from "@/api/users.ts";
+
 
 export function login(email: string, password: string): number {
 
@@ -22,7 +18,7 @@ export function login(email: string, password: string): number {
 
 }
 
-export function addUser(email: string, password: string): number {
+export function register(email: string, password: string): number {
 
   const userArray = getUsers();
 
@@ -38,6 +34,7 @@ export function addUser(email: string, password: string): number {
     username: email,
     email: email,
     password: password,
+    userType: UserType.Client,
   }
 
   if (userArray.some((user) => user.email === email)) {
@@ -50,24 +47,5 @@ export function addUser(email: string, password: string): number {
   return 201;
 }
 
-export function isUserLoggedIn() {
-  return Cookies.get('userId') !== null;
-}
 
-function saveUsers(userArray: User[]){
-  localStorage.setItem("users", JSON.stringify(userArray));
-}
-
-function getUsers(): User[] {
-  const storedUsers = localStorage.getItem("users");
-  let parsedStoredUsers;
-
-  if (storedUsers) {
-    parsedStoredUsers = JSON.parse(storedUsers);
-  } else {
-    parsedStoredUsers = [];
-  }
-
-  return parsedStoredUsers as User[];
-}
 

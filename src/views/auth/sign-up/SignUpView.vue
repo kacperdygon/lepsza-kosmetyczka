@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import "../auth.css"
+
 import {RouterLink} from "vue-router";
 
-import {addUser} from "@/api/auth.ts";
-import {computed, reactive, ref} from "vue";
+import {register} from "@/api/auth.ts";
+import {computed, reactive} from "vue";
 
 const formData = reactive({
   email: "",
@@ -33,7 +33,7 @@ function handleSubmit(): void {
   }
 
 
-  const statusCode = addUser(formData.email, formData.password);
+  const statusCode = register(formData.email, formData.password);
 
   if (statusCode == 409) {
     signUpMessage.color = "red";
@@ -47,7 +47,7 @@ function handleSubmit(): void {
 </script>
 
 <template>
-  <div>
+  <div class="auth-div">
     <form @submit.prevent="handleSubmit">
       <h1>Zarejestruj się w Kosmetyczce</h1>
 
@@ -55,7 +55,7 @@ function handleSubmit(): void {
         <input
           class="login-input"
           type="text"
-          placeholder="e-mail/nazwa"
+          placeholder="e-mail"
           v-model="formData.email"
           required
         />
@@ -95,6 +95,7 @@ function handleSubmit(): void {
 </template>
 
 <style scoped>
+@import "../auth.css";
 .sign-up-message{
   color: v-bind(signUpMessageColor)
 }

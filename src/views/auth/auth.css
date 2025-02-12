@@ -1,3 +1,5 @@
+
+
 .login-input {
     font-family:unset;
     text-align: left;
@@ -32,7 +34,7 @@
     cursor: pointer;
 }
 
-body {
+.auth-div {
     display: flex;
     align-items: center;
     justify-content: center;

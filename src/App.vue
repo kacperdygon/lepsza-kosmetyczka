@@ -27,4 +27,5 @@ console.log('Current route name:', route.name); // 🔍 Sprawdź w konsoli
 
 <style scoped>
 
+
 </style>
