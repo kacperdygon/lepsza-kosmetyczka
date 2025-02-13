@@ -6,8 +6,10 @@ import GalleryView from "@/views/main-views/gallery/GalleryView.vue";
 import BookNowView from "@/views/main-views/book-now/BookNowView.vue";
 import SignInView from "@/views/auth/sign-in/SignInView.vue";
 import SignUpView from "@/views/auth/sign-up/SignUpView.vue";
-import AdminPanelView from "@/views/admin-panel/AdminPanelView.vue";
+import AdminPanelView from "@/views/account-views/admin-panel/AdminPanelView.vue";
 import ShowVisitView from "@/views/main-views/show-visit/ShowVisitView.vue";
+import EmployeeView from "@/views/account-views/employee/EmployeeView.vue";
+import ClientView from "@/views/account-views/client/ClientView.vue";
 
 
 
@@ -63,6 +65,16 @@ const router = createRouter({
       path: '/admin-panel',
       name: 'admin-panel',
       component: AdminPanelView,
+    },
+    {
+      path: '/employee',
+      name: 'employee',
+      component: EmployeeView,
+    },
+    {
+      path: '/client',
+      name: 'client',
+      component: ClientView,
     },
   ],
 })

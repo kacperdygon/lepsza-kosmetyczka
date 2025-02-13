@@ -1,9 +1,10 @@
 <script setup lang="ts">
 
-import Treatments from "@/views/admin-panel/components/TreatmentList.vue";
-import Users from "@/views/admin-panel/components/UserList.vue";
+import Treatments from "@/views/account-views/admin-panel/components/TreatmentList.vue";
+import Users from "@/views/account-views/admin-panel/components/UserList.vue";
 import {isUserAdmin} from "@/api/users.ts";
 import {useRouter} from "vue-router";
+import {logOut} from "@/api/auth.ts";
 
 const router = useRouter();
 
@@ -16,6 +17,7 @@ if (!isUserAdmin()){
 <template>
   <div className="admin-panel">
     <h1>Panel admina</h1>
+    <button @click="logOut(router)" class="log-out-button primary-button">Wyloguj się</button>
     <Treatments/>
     <Users/>
 

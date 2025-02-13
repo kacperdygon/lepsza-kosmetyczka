@@ -51,7 +51,7 @@ export function isUserLoggedIn() {
 }
 
 export function changeUserType(userId: number, newType: UserType){
-  const users = getUsers();
+  const users = getUsersBare();
   const user = users.find(u => u.id === userId);
 
   if (user) {
@@ -62,7 +62,7 @@ export function changeUserType(userId: number, newType: UserType){
 }
 
 export function changeUserName(userId: number, newName: string) {
-  const users = getUsers();
+  const users = getUsersBare();
   const user = users.find(u => u.id === userId);
 
   if (user) {
@@ -77,4 +77,18 @@ export function isUserAdmin(){
   const userIndex = users.findIndex(user => user.id === userId);
   if (userIndex == -1) return false;
   return users[userIndex].userType === UserType.Admin;
+}
+export function isUserEmployee(){
+  const userId = Number(Cookies.get('userId'));
+  const users = getUsersBare();
+  const userIndex = users.findIndex(user => user.id === userId);
+  if (userIndex == -1) return false;
+  return users[userIndex].userType === UserType.Employee;
+}
+export function isUserClient(){
+  const userId = Number(Cookies.get('userId'));
+  const users = getUsersBare();
+  const userIndex = users.findIndex(user => user.id === userId);
+  if (userIndex == -1) return false;
+  return users[userIndex].userType === UserType.Client;
 }

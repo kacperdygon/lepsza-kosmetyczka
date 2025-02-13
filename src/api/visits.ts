@@ -1,3 +1,7 @@
+import Cookies from "js-cookie";
+import {getTreatmentById} from "@/api/treatments.ts";
+import {getEmployeeById} from "@/api/employees.ts";
+
 export enum AvaibleTimes{
   "09:00",
   "10:00",
@@ -21,6 +25,7 @@ export interface Visit{
   date: Date;
   time: AvaibleTimes;
   additionalComments: string;
+  userId: number | null;
 }
 
 export function saveVisits(userArray: Visit[]){
@@ -52,6 +57,8 @@ export function addVisit(name: string, email: string, phone: string, employeeId:
     nextId = visitArray[visitArray.length - 1].id + 1;
   }
 
+  const userId = Number(Cookies.get("userId")) ?? null;
+
   const newVisit = {
     id: nextId,
     name: name,
@@ -61,7 +68,8 @@ export function addVisit(name: string, email: string, phone: string, employeeId:
     treatmentId: treatmentId,
     date: date,
     time: time,
-    additionalComments: additionalComments
+    additionalComments: additionalComments,
+    userId: userId,
   }
 
   visitArray.push(newVisit);
@@ -96,5 +104,36 @@ export function getAvailableTimes(employeeId: number, date: Date): AvaibleTimes[
 
   // Zwrócenie dostępnych godzin
   return allTimes.filter(time => !bookedTimes.includes(time));
+}
+
+export function getVisitsOfClient(){
+  const visits = getVisits();
+
+  const userId = Number(Cookies.get("userId")) ?? null;
+
+  const filteredVisits = visits.filter(visit => visit.userId === userId);
+  return filteredVisits.map((visit) => {
+    return {
+      ...visit,
+      treatmentTitle: getTreatmentById(visit.treatmentId).title,
+      employeeName: getEmployeeById(visit.employeeId).username,
+    }
+  });
+}
+
+
+export function getVisitsOfEmployee(){
+  const visits = getVisits();
+
+  const userId = Number(Cookies.get("userId")) ?? null;
+
+  const filteredVisits = visits.filter(visit => visit.employeeId === userId);
+  return filteredVisits.map((visit) => {
+    return {
+      ...visit,
+      treatmentTitle: getTreatmentById(visit.treatmentId).title,
+      employeeName: getEmployeeById(visit.employeeId).username,
+    }
+  });
 }
 

@@ -3,6 +3,7 @@ import "../auth.css"
 import {computed, reactive, ref} from "vue";
 import {login} from "@/api/auth.ts";
 import {useRouter} from "vue-router";
+import {isUserAdmin, isUserClient, isUserEmployee, isUserLoggedIn} from "@/api/users.ts";
 
 
 
@@ -23,6 +24,16 @@ const signUpMessageColor = computed(() => {
 })
 
 const router = useRouter();
+
+if (isUserLoggedIn()){
+  if (isUserClient()){
+    router.push("/client")
+  } else if (isUserEmployee()) {
+    router.push("/employee")
+  } else if (isUserAdmin()) {
+    router.push("/admin-panel")
+  }
+}
 
 function handleSubmit() {
 

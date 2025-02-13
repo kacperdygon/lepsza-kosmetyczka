@@ -3,8 +3,9 @@ import { getTreatments } from "@/api/treatments.ts";
 import { getEmployees } from "@/api/employees.ts";
 import {addVisit, getVisits} from "@/api/visits.ts";
 import { useRoute } from "vue-router";
-import { reactive, computed } from "vue";
+import {reactive, computed, ref} from "vue";
 import { AvaibleTimes } from "@/api/visits.ts";
+import {getClientData} from "@/api/clientData.ts";
 
 const treatments = getTreatments();
 const employees = getEmployees();
@@ -13,17 +14,20 @@ const visits = getVisits(); // Pobieramy wszystkie wizyty
 const route = useRoute();
 const treatmentId = route.params.id ? Number(route.params.id) : 0; // Parsowanie ID
 
-// Dane formularza
+const clientData = getClientData();
+
 const formData = reactive({
-  name: "",
-  email: "",
-  phone: "",
+  name: clientData ? clientData.name : "",
+  email: clientData ? clientData.email : "",
+  phone: clientData ? clientData.phone : "",
   employeeId: 0,
   treatmentId: treatmentId,
   date: "",
   time: "" as unknown as AvaibleTimes,
   additionalComments: "",
 });
+
+const message = ref('');
 
 const availableTimes = computed(() => {
   if (!formData.date || !formData.employeeId) {
@@ -35,16 +39,18 @@ const availableTimes = computed(() => {
     .map((visit) => visit.time);
 
   return Object.values(AvaibleTimes)
-    .filter((time) => isNaN(Number(time))) // Usuwa liczby (0-9)
-    .filter((time) => !bookedTimes.includes(time)); // Usuwa już zarezerwowane godziny
+    .filter((time) => isNaN(Number(time)))
+    .filter((time) => !bookedTimes.includes(time));
 });
 
 
-// Obsługa wysyłania formularza
 const submitForm = () => {
   console.log("Form submitted:", formData);
   addVisit(formData.name, formData.email, formData.phone, formData.employeeId, formData.treatmentId, formData.date, formData.time, formData.additionalComments);
+  message.value = "Umówiono zabieg!";
 };
+
+
 </script>
 
 <template>
@@ -115,12 +121,19 @@ const submitForm = () => {
         </div>
 
         <button type="submit" class="btn-submit primary-button">Zarezerwuj termin</button>
+
+        <p class="add-message">{{message}}</p>
+
       </form>
     </section>
   </div>
 </template>
 
 <style scoped>
+.add-message {
+  color:green;
+}
+
 .appointment-hero {
   background-color: var(--foreground);
   text-align: center;

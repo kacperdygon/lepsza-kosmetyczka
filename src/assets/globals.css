@@ -60,8 +60,16 @@ h6 {
     color: var(--foreground);
     border-radius: 10px;
     padding: 10px;
+    cursor:pointer;
 }
 
 .plain-button {
     color: blue;
+}
+
+.log-out-button{
+    width:200px;
+    align-self: center;
+    cursor:pointer;
+    margin-top:20px;
 }

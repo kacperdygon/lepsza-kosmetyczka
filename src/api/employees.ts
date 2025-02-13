@@ -1,4 +1,4 @@
-import {getUsers, saveUsers, UserType} from "@/api/users.ts";
+import {getUsers, getUsersBare, saveUsers, UserType} from "@/api/users.ts";
 
 export function getEmployees() {
   const users = getUsers();
@@ -6,7 +6,7 @@ export function getEmployees() {
 }
 
 export function changeToEmployee(id: number) {
-  const users = getUsers();
+  const users = getUsersBare();
 
   const userIndex = users.findIndex(user => user.id === id);
 
@@ -17,7 +17,7 @@ export function changeToEmployee(id: number) {
 }
 
 export function removeEmployee(id: number) {
-  const users = getUsers();
+  const users = getUsersBare();
 
   const userIndex = users.findIndex(user => user.id === id);
 
