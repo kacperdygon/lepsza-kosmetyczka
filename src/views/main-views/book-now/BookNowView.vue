@@ -46,8 +46,20 @@ const availableTimes = computed(() => {
 
 const submitForm = () => {
   console.log("Form submitted:", formData);
-  addVisit(formData.name, formData.email, formData.phone, formData.employeeId, formData.treatmentId, formData.date, formData.time, formData.additionalComments);
+  const visitId = addVisit(formData.name, formData.email, formData.phone, formData.employeeId, formData.treatmentId, formData.date, formData.time, formData.additionalComments);
   message.value = "Umówiono zabieg!";
+
+  // Prepare the data to send
+  const data = { ...formData, id: visitId };
+
+// Send POST request using fetch
+fetch('http://localhost:3000/api/send-mail', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',  // Tell the server that we're sending JSON
+  },
+  body: JSON.stringify(data),  // Convert the data object to JSON
+})
 };
 
 
